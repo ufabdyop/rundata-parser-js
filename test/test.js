@@ -50,8 +50,9 @@ var afmRundata = [
 
 
 describe('ElementParser', function() {
-    var elementParserInputXml = "<inputInt id=\"tips-used\" xmlns=\"http://snf.stanford.edu/rmconfig1\">\n\
+    var elementParserInputXml = "<inputInt id=\"tips-used\" min=\"1\" max=\"5\" cat=\"optional\" xmlns=\"http://snf.stanford.edu/rmconfig1\">\n\
         <description>Tips Used: (enter number)</description>\n\
+        <units>10^(-6) torr</units>\n\
     </inputInt>";
     
   describe('#constructor()', function() {
@@ -80,6 +81,30 @@ describe('ElementParser', function() {
         parser = new ElementParser();
         var result = parser.parse(elementParserInputXml);
         assert.equal(result.description, 'Tips Used: (enter number)');
+    });      
+    it('should read input and figure out the units', function() {
+        parser = new ElementParser();
+        var result = parser.parse(elementParserInputXml);
+        assert.equal(result.units, '10^(-6) torr');
+    });      
+    it('should read input and figure out the attributes', function() {
+        parser = new ElementParser();
+        var result = parser.parse(elementParserInputXml);
+        assert.equal(result.min, "1");
+        assert.equal(result.max, "5");
+        assert.equal(result.cat, "optional");
+        assert.equal(result.required, false);
+    });      
+    it('should read input and figure out the missing attributes', function() {
+        var testXml = "<inputInt xmlns=\"http://snf.stanford.edu/rmconfig1\">\n\
+        </inputInt>";
+        
+        parser = new ElementParser();
+        var result = parser.parse(testXml);
+        assert.strictEqual(result.min, false);
+        assert.strictEqual(result.max, false);
+        assert.strictEqual(result.cat, false);
+        assert.strictEqual(result.required, true);
     });      
   });
 });
