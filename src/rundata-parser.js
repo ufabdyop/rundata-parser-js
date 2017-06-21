@@ -45,7 +45,8 @@ class RundataParser {
       for( var i = 0; i < kids.length; i++) {
         if (recognizedTags.indexOf(kids[i].tagName) === 0) {
             tmpInput = {
-                "id": kids[i].id,
+                "id": kids[i].getAttribute("id"),
+                "description": kids[i].getElementsByTagName("description")[0].firstChild.data,
                 "dom": kids[i],
                 "original": serializer.serializeToString(kids[i]),
                 "tag": kids[i].tagName,

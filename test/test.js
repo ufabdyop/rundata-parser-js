@@ -81,13 +81,22 @@ describe('RundataParser', function() {
         var inputXml = "<inputInt id=\"tips-used\" xmlns=\"http://snf.stanford.edu/rmconfig1\">\n\
         <description>Tips Used: (enter number)</description>\n\
     </inputInt>"
-        console.log(result.inputs[0].original);
         assert.equal(result.inputs[0].original, inputXml);
     });
     it('should read input and figure out the type', function() {
         parser = new RundataParser();
         var result = parser.parse(afmRundata[0]);
         assert.equal(result.inputs[0].type, 'Int');
+    });    
+    it('should read input and figure out the id', function() {
+        parser = new RundataParser();
+        var result = parser.parse(afmRundata[0]);
+        assert.equal(result.inputs[0].id, 'tips-used');
+    });    
+    it('should read input and figure out the description', function() {
+        parser = new RundataParser();
+        var result = parser.parse(afmRundata[0]);
+        assert.equal(result.inputs[0].description, 'Tips Used: (enter number)');
     });    
   });
 });
