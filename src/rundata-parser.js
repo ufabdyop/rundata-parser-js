@@ -24,7 +24,11 @@ class RundataParser {
     var description = xmlDoc.getElementsByTagName('description')[0].innerHTML;
     var comment = xmlDoc.getElementsByTagName('comment')[0].innerHTML;
     */
-    return {"dom": this.xmlDoc};
+    return {
+        "dom": this.xmlDoc,
+        "description": this.raw.description,
+        "comment": ""
+    };
   }
 }
 

@@ -37,7 +37,7 @@ describe('RundataParser', function() {
     });
   });
   describe('#parse()', function() {
-    it('should parse fixture', function() {
+    it('should parse fixture for description', function() {
         parser = new RundataParser();
         var result = parser.parse(tmvRundata[0]);
         assert.equal(result.description, "TMV Super");
