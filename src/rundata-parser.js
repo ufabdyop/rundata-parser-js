@@ -6,6 +6,8 @@ class RundataParser {
   }    
   parse(rawObject) {
       this.raw = rawObject;
+      const parsed = {};
+      return parsed;
   }
 }
 
