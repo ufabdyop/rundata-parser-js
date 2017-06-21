@@ -32,7 +32,7 @@ describe('RundataParser', function() {
     it('should parse fixture', function() {
         parser = new RundataParser();
         var result = parser.parse(tmvRundata[0]);
-        assert(typeof result['dom'], 'DOM');
+        assert.equal(typeof result['dom'], 'DOM');
     });
   });
 });
