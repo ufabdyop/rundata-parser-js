@@ -2,11 +2,11 @@
 
 if (typeof require == 'function') { 
   var DOMParser = require('xmldom').DOMParser;
+  var XMLSerializer = require('xmldom').XMLSerializer;
 }
 if (typeof module == 'undefined') { 
     var module = {};
 }
-
 
 class RundataParser {
   constructor() {
@@ -40,9 +40,17 @@ class RundataParser {
       var inputs = [];
       var recognizedTags = ['inputInt'];
       var kids = xml.getElementsByTagName('process')[0].childNodes;
+      var tmpInput = {};
+      var serializer = new XMLSerializer();
       for( var i = 0; i < kids.length; i++) {
         if (recognizedTags.indexOf(kids[i].tagName) === 0) {
-            inputs.push(kids[i]);
+            tmpInput = {
+                "id": kids[i].id,
+                "dom": kids[i],
+                "original": serializer.serializeToString(kids[i]),
+                "tag": kids[i].tagName
+            };
+            inputs.push(tmpInput);
         }
       }
       return inputs;
