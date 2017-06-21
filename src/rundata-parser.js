@@ -13,6 +13,7 @@ class RundataParser {
       this.raw = {};
       this.xml = "";
       this.xmlDoc = {};
+      this.inputs = [];
   }    
   parse(rawObject) {
     this.raw = rawObject;
@@ -22,6 +23,7 @@ class RundataParser {
     this.name = rawObject["name"];
     this.xmlDoc = domParser.parseFromString(this.xml,"text/xml");
     this.comment = this.xmlDoc.getElementsByTagName('comment')[0].childNodes[0].data;
+    this.inputs = this.parseChildren(this.xmlDoc);
     /*
     var description = xmlDoc.getElementsByTagName('description')[0].innerHTML;
     var comment = xmlDoc.getElementsByTagName('comment')[0].innerHTML;
@@ -30,8 +32,20 @@ class RundataParser {
         "dom": this.xmlDoc,
         "description": this.description,
         "comment": this.comment,
-        "name": this.name
+        "name": this.name,
+        "inputs": this.inputs
     };
+  }
+  parseChildren(xml) {
+      var inputs = [];
+      var recognizedTags = ['inputInt'];
+      var kids = xml.getElementsByTagName('process')[0].childNodes;
+      for( var i = 0; i < kids.length; i++) {
+        if (recognizedTags.indexOf(kids[i].tagName) === 0) {
+            inputs.push(kids[i]);
+        }
+      }
+      return inputs;
   }
 }
 

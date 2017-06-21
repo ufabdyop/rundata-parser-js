@@ -53,8 +53,7 @@ describe('RundataParser', function() {
     it('should show child input types', function() {
         parser = new RundataParser();
         var result = parser.parse(tmvRundata[0]);
-        assert.equal(typeof result.dom, 'object');
-        assert.equal(typeof result.inputs, 'Array'); 
+        assert.ok(result.inputs instanceof Array); 
     });
   });
 });
