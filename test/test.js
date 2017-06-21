@@ -3,8 +3,9 @@ var assert = require('assert');
 var XMLSerializer = require('xmldom').XMLSerializer;
 
 // import {RundataParser} from "rundata-parser";
-var RundataParser = require("../src/rundata-parser");
-
+var RundataParserLibrary = require("../src/rundata-parser");
+var RundataParser = RundataParserLibrary.RundataParser;
+var ElementParser = RundataParserLibrary.ElementParser;
 
 var tmvRundata = [
     {
@@ -46,6 +47,42 @@ var afmRundata = [
         "xmlDefinition": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<process xmlns=\"http://snf.stanford.edu/rmconfig1\" id=\"aborted\">\n    <comment>Use this process if your run was aborted.</comment>\n    <comment>$augmented</comment>\n    <description>Run Aborted</description>\n    <inputString id=\"aborted-comments\">\n        <description>Comments</description>\n    </inputString>\n</process>\n<!--@CLASSNAME:org.opencoral.runtime.xml.Process-->"
     }
 ];
+
+
+describe('ElementParser', function() {
+    var elementParserInputXml = "<inputInt id=\"tips-used\" xmlns=\"http://snf.stanford.edu/rmconfig1\">\n\
+        <description>Tips Used: (enter number)</description>\n\
+    </inputInt>";
+    
+  describe('#constructor()', function() {
+    it('should instantiate', function() {
+        parser = new ElementParser();
+    });
+  });
+  
+  describe('#parse()', function() {
+      it('should read input as xml', function() {
+        parser = new ElementParser();
+        var result = parser.parse(elementParserInputXml);
+        assert.equal(result.original, elementParserInputXml);
+    });
+    it('should read input and figure out the type', function() {
+        parser = new ElementParser();
+        var result = parser.parse(elementParserInputXml);
+        assert.equal(result.type, 'Int');
+    });    
+    it('should read input and figure out the id', function() {
+        parser = new ElementParser();
+        var result = parser.parse(elementParserInputXml);
+        assert.equal(result.id, 'tips-used');
+    });    
+    it('should read input and figure out the description', function() {
+        parser = new ElementParser();
+        var result = parser.parse(elementParserInputXml);
+        assert.equal(result.description, 'Tips Used: (enter number)');
+    });      
+  });
+});
 
 describe('RundataParser', function() {
   describe('#constructor()', function() {

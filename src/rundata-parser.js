@@ -8,6 +8,33 @@ if (typeof module == 'undefined') {
     var module = {};
 }
 
+class ElementParser {
+  constructor() {
+      this.xml = "";
+      this.original = "";
+      this.xmlDoc = {};
+      this.id = "";
+  }
+  parse(xml) {
+    var domParser = new DOMParser();
+    this.xml = xml;
+    this.original = xml; //alias
+    this.xmlDoc = domParser.parseFromString(this.xml,"text/xml");
+    this.description = this.xmlDoc.getElementsByTagName("description")[0].firstChild.data;
+    this.id = this.xmlDoc.firstChild.getAttribute("id");
+    this.tag = this.xmlDoc.firstChild.tagName;
+    this.type = this.tag.replace('input', '');
+    
+    return {
+        "id": this.id,
+        "original": this.original,
+        "tag": this.tag,
+        "type": this.type,
+        "description": this.description
+    }
+  }
+}
+
 class RundataParser {
   constructor() {
       this.raw = {};
@@ -40,18 +67,14 @@ class RundataParser {
       var inputs = [];
       var recognizedTags = ['inputInt'];
       var kids = xml.getElementsByTagName('process')[0].childNodes;
+      var tempXml = "";
       var tmpInput = {};
       var serializer = new XMLSerializer();
+      var elementParser = new ElementParser();
       for( var i = 0; i < kids.length; i++) {
         if (recognizedTags.indexOf(kids[i].tagName) === 0) {
-            tmpInput = {
-                "id": kids[i].getAttribute("id"),
-                "description": kids[i].getElementsByTagName("description")[0].firstChild.data,
-                "dom": kids[i],
-                "original": serializer.serializeToString(kids[i]),
-                "tag": kids[i].tagName,
-                "type": kids[i].tagName.replace('input', '')
-            };
+            tempXml = serializer.serializeToString(kids[i]);
+            tmpInput = elementParser.parse(tempXml);
             inputs.push(tmpInput);
         }
       }
@@ -60,4 +83,5 @@ class RundataParser {
 }
 
 // export {RundataParser};
-module.exports = RundataParser;
+module.exports.RundataParser = RundataParser;
+module.exports.ElementParser = ElementParser;
