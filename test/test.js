@@ -84,6 +84,11 @@ describe('RundataParser', function() {
         console.log(result.inputs[0].original);
         assert.equal(result.inputs[0].original, inputXml);
     });
+    it('should read input and figure out the type', function() {
+        parser = new RundataParser();
+        var result = parser.parse(afmRundata[0]);
+        assert.equal(result.inputs[0].type, 'Int');
+    });    
   });
 });
 
