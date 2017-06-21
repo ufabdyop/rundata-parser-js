@@ -2,8 +2,11 @@
 
 class RundataParser {
   constructor() {
-    this.foo = 1;
+      this.raw = {};
   }    
+  parse(rawObject) {
+      this.raw = rawObject;
+  }
 }
 
 // export {RundataParser};
