@@ -48,7 +48,8 @@ class RundataParser {
                 "id": kids[i].id,
                 "dom": kids[i],
                 "original": serializer.serializeToString(kids[i]),
-                "tag": kids[i].tagName
+                "tag": kids[i].tagName,
+                "type": kids[i].tagName.replace('input', '')
             };
             inputs.push(tmpInput);
         }
