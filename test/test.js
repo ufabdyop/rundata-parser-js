@@ -35,12 +35,26 @@ describe('RundataParser', function() {
         assert.equal(typeof result.dom, 'object');
         assert.equal(typeof result.dom.childNodes, 'object'); 
     });
-  });
-  describe('#parse()', function() {
     it('should parse fixture for description', function() {
         parser = new RundataParser();
         var result = parser.parse(tmvRundata[0]);
         assert.equal(result.description, "TMV Super");
+    });
+    it('should parse fixture for comment', function() {
+        parser = new RundataParser();
+        var result = parser.parse(tmvRundata[0]);
+        assert.equal(result.comment, "Process for TMV Super");
+    });
+    it('should parse fixture for name', function() {
+        parser = new RundataParser();
+        var result = parser.parse(tmvRundata[0]);
+        assert.equal(result.name, "tmv-super");
+    });
+    it('should show child input types', function() {
+        parser = new RundataParser();
+        var result = parser.parse(tmvRundata[0]);
+        assert.equal(typeof result.dom, 'object');
+        assert.equal(typeof result.inputs, 'Array'); 
     });
   });
 });

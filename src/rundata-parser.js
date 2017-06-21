@@ -18,16 +18,19 @@ class RundataParser {
     this.raw = rawObject;
     var domParser = new DOMParser();
     this.xml = rawObject["xmlDefinition"];
+    this.description = rawObject["description"];
+    this.name = rawObject["name"];
     this.xmlDoc = domParser.parseFromString(this.xml,"text/xml");
-
+    this.comment = this.xmlDoc.getElementsByTagName('comment')[0].childNodes[0].data;
     /*
     var description = xmlDoc.getElementsByTagName('description')[0].innerHTML;
     var comment = xmlDoc.getElementsByTagName('comment')[0].innerHTML;
     */
     return {
         "dom": this.xmlDoc,
-        "description": this.raw.description,
-        "comment": ""
+        "description": this.description,
+        "comment": this.comment,
+        "name": this.name
     };
   }
 }
