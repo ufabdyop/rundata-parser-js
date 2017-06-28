@@ -37,6 +37,7 @@ class ElementParser {
     this.min = this.getAttributeOrEmpty('min');
     this.max = this.getAttributeOrEmpty('max');
     this.cat = this.getAttributeOrEmpty('cat');
+    this.src = this.getAttributeOrEmpty('src');
     this.required = (this.cat != "optional");
     this.choices =  this.getTagsOrEmpty('choice');
     
@@ -50,6 +51,7 @@ class ElementParser {
         "min": this.min,
         "max": this.max,
         "cat": this.cat,
+        "src": this.src,
         "choices": this.choices,
         "required": this.required
     }
@@ -119,6 +121,24 @@ class GenericRenderer {
   }
 }
 
+class InputImageRenderer {
+  constructor() {
+      this.output = "";
+  }
+  render(element) {
+      var buffer = "";
+      buffer += "<div class=\"rundata-input\" data-type=\"" + element.type + "\">\n";
+      buffer += "\t<label for=\"" + element.id + "\">" + element.description + "</label>\n";
+      buffer += "\t<img id=\"" + element.id + "\" src=\"" + element.src + "\"/>";
+      if (element.units === false) {
+          element.units = "";
+      }      
+      buffer += "\t<span class=\"rundata-units\">" + element.units + "</span>\n";
+      buffer += "</div>\n";
+      return buffer;      
+  }
+}
+
 class DropdownRenderer {
   constructor() {
       this.output = "";
@@ -138,6 +158,7 @@ class DropdownRenderer {
           buffer += " data-required=\"true\""; 
       }
       buffer += ">\n";
+      buffer += "<option></option>\n";
       for( var i in element.choices) {
           buffer += "\t\t<option data-index=\"" + i + "\"" +
                             " value=\"" + element.choices[i] + "\">" +
@@ -164,12 +185,14 @@ class ElementRenderer {
       if (element.type == 'Int' || 
           element.type == 'Float'|| 
           element.type == 'String'|| 
-          element.type == 'Img'||
           element.type == 'Time') {
           helper = new GenericRenderer();
           return helper.render(element);
       } else if (element.type == 'Choice') {
           helper = new DropdownRenderer();
+          return helper.render(element);
+      } else if (element.type == 'Img') {
+          helper = new InputImageRenderer();
           return helper.render(element);
       }
       return "";

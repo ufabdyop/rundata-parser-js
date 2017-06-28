@@ -53,3 +53,4 @@ var outputHtml = rundataParser.getHtml(afmRundata[0]);
 
 
 
+document.write(outputHtml);
