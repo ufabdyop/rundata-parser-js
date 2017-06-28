@@ -192,7 +192,7 @@ describe('RundataParser', function() {
         var expectedOutput = "<div class=\"rundata-input\" data-type=\"Int\">\n\
 	<label for=\"tips-used\">Tips Used: (enter number)</label>\n\
 	<input id=\"tips-used\" name=\"tips-used\" data-required=\"true\"></input>\n\
-	<span class=\"rundata-units\">false</span>\n\
+	<span class=\"rundata-units\"></span>\n\
 </div>\n";
         var result = parser.getHtml(afmRundata[4]);
         assert.equal(expectedOutput, result);
@@ -240,7 +240,7 @@ describe('ElementRenderer', function() {
 		<option data-index=\"2\" value=\"Contact\">Contact</option>\n\
 		<option data-index=\"3\" value=\"Peak Force QNM\">Peak Force QNM</option>\n\
 	</select>\n\
-	<span class=\"rundata-units\">false</span>\n\
+	<span class=\"rundata-units\"></span>\n\
 </div>\n";
         parser = new ElementParser();
         var result = parser.parse(inputXml);

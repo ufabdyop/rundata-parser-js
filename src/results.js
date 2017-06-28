@@ -47,5 +47,9 @@ var c = xmlDoc.children[0].children;
 var input = afmRundata[0];
 
 var rundataParser = new RundataParser();
-var output = rundataParser.parse(input);
+var output = rundataParser.parse(afmRundata[0]);
+var outputHtml = rundataParser.getHtml(afmRundata[0]);
+
+
+
 

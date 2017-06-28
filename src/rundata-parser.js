@@ -108,7 +108,12 @@ class GenericRenderer {
           buffer += " data-required=\"true\""; 
       }
       buffer += "></input>\n";
+      
+      if (element.units === false) {
+          element.units = "";
+      }
       buffer += "\t<span class=\"rundata-units\">" + element.units + "</span>\n";
+      
       buffer += "</div>\n";
       return buffer;      
   }
@@ -140,6 +145,10 @@ class DropdownRenderer {
                     "</option>\n";
       }
       buffer += "\t</select>\n";
+      
+      if (element.units === false) {
+          element.units = "";
+      }      
       buffer += "\t<span class=\"rundata-units\">" + element.units + "</span>\n";
       buffer += "</div>\n";
       return buffer;      
@@ -155,7 +164,6 @@ class ElementRenderer {
       if (element.type == 'Int' || 
           element.type == 'Float'|| 
           element.type == 'String'|| 
-          element.type == 'Choice'||
           element.type == 'Img'||
           element.type == 'Time') {
           helper = new GenericRenderer();
@@ -218,12 +226,13 @@ class RundataParser {
       }
       return inputs;
   }
-  getHtml(xml) {
+  getHtml(rawObject) {
       var buffer = "";
-      var renderer = new ElementRenderer();
-      var parsedData = this.parse(xml);
+      var parsedData = this.parse(rawObject);
       var xmlDoc = parsedData['dom'];
       var inputs = this.parseChildren(xmlDoc);
+      
+      var renderer = new ElementRenderer();
       for( var i in inputs ) {
           buffer += renderer.render(inputs[i]);
       }
