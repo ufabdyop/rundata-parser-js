@@ -6,6 +6,8 @@ var XMLSerializer = require('xmldom').XMLSerializer;
 var RundataParserLibrary = require("../src/rundata-parser");
 var RundataParser = RundataParserLibrary.RundataParser;
 var ElementParser = RundataParserLibrary.ElementParser;
+var ElementRenderer = RundataParserLibrary.ElementRenderer;
+
 
 var tmvRundata = [
     {
@@ -168,3 +170,35 @@ describe('RundataParser', function() {
   });
 });
 
+describe('ElementRenderer', function() {
+    var elementParserInputXml = "<inputInt id=\"tips-used\" min=\"1\" max=\"5\" cat=\"optional\" xmlns=\"http://snf.stanford.edu/rmconfig1\">\n\
+        <description>Tips Used: (enter number)</description>\n\
+        <units>10^(-6) torr</units>\n\
+    </inputInt>";
+    
+  describe('#constructor()', function() {
+    it('should instantiate', function() {
+        parser = new ElementParser();
+        renderer = new ElementRenderer();
+    });
+  });
+  
+  describe('#render()', function() {
+    it('should create html element', function() {
+        var inputXml = "<inputInt id=\"tips-used\" min=\"1\" max=\"5\" cat=\"optional\" xmlns=\"http://snf.stanford.edu/rmconfig1\">\n\
+        <description>Tips Used: (enter number)</description>\n\
+        <units>10^(-6) torr</units>\n\
+    </inputInt>";
+        var expectedOutputHtml = "<div class=\"rundata-input\" data-type=\"Int\">\n\
+\t<label for=\"tips-used\">Tips Used: (enter number)</label>\n\
+\t<input id=\"tips-used\" name=\"tips-used\" data-min=\"1\" data-max=\"5\"></input>\n\
+\t<span class=\"rundata-units\">10^(-6) torr</span>\n\
+</div>\n";
+        parser = new ElementParser();
+        var result = parser.parse(inputXml);
+        var output = renderer.render(result);
+        
+        assert.equal(expectedOutputHtml, output, "incomplete");
+    });
+  });
+});

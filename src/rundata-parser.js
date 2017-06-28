@@ -70,6 +70,35 @@ class ElementParser {
   }
 }
 
+class ElementRenderer {
+  constructor() {
+      this.original = {};
+      this.output = "";
+  }
+  render(element) {
+      return this.template(element);
+  }
+  template(element) {
+      var buffer = "";
+      buffer += "<div class=\"rundata-input\" data-type=\"" + element.type + "\">\n";
+      buffer += "\t<label for=\"" + element.id + "\">" + element.description + "</label>\n";
+      buffer += "\t<input id=\"" + element.id + "\" name=\"" + element.id + "\"";
+      if (element.min) {
+          buffer += " data-min=\"" + element.min + "\""; 
+      }
+      if (element.max) {
+          buffer += " data-max=\"" + element.max + "\""; 
+      }
+      if (element.required) {
+          buffer += " data-required=\"true\""; 
+      }
+      buffer += "></input>\n";
+      buffer += "\t<span class=\"rundata-units\">" + element.units + "</span>\n";
+      buffer += "</div>\n";
+      return buffer;
+  }
+}
+
 class RundataParser {
   constructor() {
       this.raw = {};
@@ -116,3 +145,4 @@ class RundataParser {
 // export {RundataParser};
 module.exports.RundataParser = RundataParser;
 module.exports.ElementParser = ElementParser;
+module.exports.ElementRenderer = ElementRenderer;
