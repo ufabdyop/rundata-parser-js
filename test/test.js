@@ -9,6 +9,7 @@ var ElementParser = RundataParserLibrary.ElementParser;
 var ElementRenderer = RundataParserLibrary.ElementRenderer;
 
 
+
 var tmvRundata = [
     {
         "description": "TMV Super",
@@ -47,7 +48,12 @@ var afmRundata = [
         "description": "Run Aborted",
         "name": "aborted",
         "xmlDefinition": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<process xmlns=\"http://snf.stanford.edu/rmconfig1\" id=\"aborted\">\n    <comment>Use this process if your run was aborted.</comment>\n    <comment>$augmented</comment>\n    <description>Run Aborted</description>\n    <inputString id=\"aborted-comments\">\n        <description>Comments</description>\n    </inputString>\n</process>\n<!--@CLASSNAME:org.opencoral.runtime.xml.Process-->"
-    }
+    },
+    {
+        "description": "AFM Fake Rundata Definition2",
+        "name": "afm-bruker-dimension-icon-fake",
+        "xmlDefinition": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<process xmlns=\"http://snf.stanford.edu/rmconfig1\" id=\"afm-bruker-dimension-icon-fake\">\n    <comment>AFM</comment>\n    <comment>$augmented</comment>\n    <description>AFM</description>\n    <inputInt id=\"tips-used\">\n        <description>Tips Used: (enter number)</description>\n    </inputInt></process>\n<!--@CLASSNAME:org.opencoral.runtime.xml.Process-->"
+    },
 ];
 
 
@@ -180,6 +186,16 @@ describe('RundataParser', function() {
         parser = new RundataParser();
         var result = parser.parse(afmRundata[0]);
         assert.equal(result.inputs[0].description, 'Tips Used: (enter number)');
+    });
+    it('should transform xml into html', function() {
+        parser = new RundataParser();
+        var expectedOutput = "<div class=\"rundata-input\" data-type=\"Int\">\n\
+	<label for=\"tips-used\">Tips Used: (enter number)</label>\n\
+	<input id=\"tips-used\" name=\"tips-used\" data-required=\"true\"></input>\n\
+	<span class=\"rundata-units\">false</span>\n\
+</div>\n";
+        var result = parser.getHtml(afmRundata[4]);
+        assert.equal(expectedOutput, result);
     });
   });
 });

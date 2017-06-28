@@ -187,20 +187,40 @@ class RundataParser {
   }
   parseChildren(xml) {
       var inputs = [];
-      var recognizedTags = ['inputInt'];
+      var recognizedTags = [
+          'inputInt', 
+          'inputFloat', 
+          'inputString', 
+          'inputChoice',
+          'inputImg',
+          'inputTime',
+      ];
       var kids = xml.getElementsByTagName('process')[0].childNodes;
       var tempXml = "";
       var tmpInput = {};
       var serializer = new XMLSerializer();
       var elementParser = new ElementParser();
       for( var i = 0; i < kids.length; i++) {
-        if (recognizedTags.indexOf(kids[i].tagName) === 0) {
+        if (recognizedTags.indexOf(kids[i].tagName) !== -1) {
             tempXml = serializer.serializeToString(kids[i]);
             tmpInput = elementParser.parse(tempXml);
             inputs.push(tmpInput);
+        } else {
+            //console.log("*" + kids[i].tagName + "*");
         }
       }
       return inputs;
+  }
+  getHtml(xml) {
+      var buffer = "";
+      var renderer = new ElementRenderer();
+      var parsedData = this.parse(xml);
+      var xmlDoc = parsedData['dom'];
+      var inputs = this.parseChildren(xmlDoc);
+      for( var i in inputs ) {
+          buffer += renderer.render(inputs[i]);
+      }
+      return buffer;
   }
 }
 
