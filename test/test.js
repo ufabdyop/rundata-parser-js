@@ -107,7 +107,21 @@ describe('ElementParser', function() {
         assert.strictEqual(result.max, false);
         assert.strictEqual(result.cat, false);
         assert.strictEqual(result.required, true);
-    });      
+    });
+    it('should parse rundata dropdown element', function() {
+        var inputXml = "<inputChoice id=\"mode-used\" type=\"string\">\n\
+            <description>Mode Used:</description>\n\
+            <choice id=\"0\">ScanAsyst</choice>\n\
+            <choice id=\"1\">Tapping</choice>\n\
+            <choice id=\"2\">Contact</choice>\n\
+            <choice id=\"3\">Peak Force QNM</choice>\n\
+        </inputChoice>";
+        parser = new ElementParser();
+        var result = parser.parse(inputXml);
+        assert.equal(result.type, 'Choice');
+        assert.equal(result.id, 'mode-used');
+        assert.equal(result.choices[0], 'ScanAsyst');
+    });    
   });
 });
 
@@ -166,7 +180,7 @@ describe('RundataParser', function() {
         parser = new RundataParser();
         var result = parser.parse(afmRundata[0]);
         assert.equal(result.inputs[0].description, 'Tips Used: (enter number)');
-    });    
+    });
   });
 });
 
@@ -198,7 +212,26 @@ describe('ElementRenderer', function() {
         var result = parser.parse(inputXml);
         var output = renderer.render(result);
         
-        assert.equal(expectedOutputHtml, output, "incomplete");
+        assert.equal(expectedOutputHtml, output);
     });
+    it('should parse and render rundata dropdown element', function() {
+        var inputXml = "<inputChoice id=\"mode-used\" type=\"string\">\n        <description>Mode Used:</description>\n        <choice id=\"0\">ScanAsyst</choice>\n        <choice id=\"1\">Tapping</choice>\n        <choice id=\"2\">Contact</choice>\n        <choice id=\"3\">Peak Force QNM</choice>\n    </inputChoice>";
+        var expectedOutputHtml = "<div class=\"rundata-input\" data-type=\"Choice\">\n\
+	<label for=\"mode-used\">Mode Used:</label>\n\
+	<select id=\"mode-used\" name=\"mode-used\" data-required=\"true\">\n\
+		<option data-index=\"0\" value=\"ScanAsyst\">ScanAsyst</option>\n\
+		<option data-index=\"1\" value=\"Tapping\">Tapping</option>\n\
+		<option data-index=\"2\" value=\"Contact\">Contact</option>\n\
+		<option data-index=\"3\" value=\"Peak Force QNM\">Peak Force QNM</option>\n\
+	</select>\n\
+	<span class=\"rundata-units\">false</span>\n\
+</div>\n";
+        parser = new ElementParser();
+        var result = parser.parse(inputXml);
+        var output = renderer.render(result);
+        assert.equal(expectedOutputHtml, output);
+    });
+    
+    //
   });
 });

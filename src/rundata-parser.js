@@ -36,6 +36,7 @@ class ElementParser {
     this.max = this.getAttributeOrEmpty('max');
     this.cat = this.getAttributeOrEmpty('cat');
     this.required = (this.cat != "optional");
+    this.choices =  this.getTagsOrEmpty('choice');
     
     return {
         "id": this.id,
@@ -47,6 +48,7 @@ class ElementParser {
         "min": this.min,
         "max": this.max,
         "cat": this.cat,
+        "choices": this.choices,
         "required": this.required
     }
   }
@@ -61,6 +63,21 @@ class ElementParser {
        }
        return false;
   }
+  getTagsOrEmpty(tag) {
+      var returnValue = {};
+      var elems = this.xmlDoc.getElementsByTagName(tag);
+       if (elems) {
+            for(var i = 0; i < elems.length; i++) {
+                if (elems[i]) {
+                    var id = elems[i].getAttribute("id");
+                    if (elems[i].firstChild) {
+                        returnValue[id] = elems[i].firstChild.data;
+                    }
+                }
+            }
+       }
+       return returnValue;
+  }
   getAttributeOrEmpty(attr) {
     var candidate = this.xmlDoc.firstChild.getAttribute(attr);
     if (candidate) {
@@ -70,15 +87,11 @@ class ElementParser {
   }
 }
 
-class ElementRenderer {
+class GenericRenderer {
   constructor() {
-      this.original = {};
       this.output = "";
   }
   render(element) {
-      return this.template(element);
-  }
-  template(element) {
       var buffer = "";
       buffer += "<div class=\"rundata-input\" data-type=\"" + element.type + "\">\n";
       buffer += "\t<label for=\"" + element.id + "\">" + element.description + "</label>\n";
@@ -95,7 +108,56 @@ class ElementRenderer {
       buffer += "></input>\n";
       buffer += "\t<span class=\"rundata-units\">" + element.units + "</span>\n";
       buffer += "</div>\n";
-      return buffer;
+      return buffer;      
+  }
+}
+
+class DropdownRenderer {
+  constructor() {
+      this.output = "";
+  }
+  render(element) {
+      var buffer = "";
+      buffer += "<div class=\"rundata-input\" data-type=\"" + element.type + "\">\n";
+      buffer += "\t<label for=\"" + element.id + "\">" + element.description + "</label>\n";
+      buffer += "\t<select id=\"" + element.id + "\" name=\"" + element.id + "\"";
+      if (element.min) {
+          buffer += " data-min=\"" + element.min + "\""; 
+      }
+      if (element.max) {
+          buffer += " data-max=\"" + element.max + "\""; 
+      }
+      if (element.required) {
+          buffer += " data-required=\"true\""; 
+      }
+      buffer += ">\n";
+      for( var i in element.choices) {
+          buffer += "\t\t<option data-index=\"" + i + "\"" +
+                            " value=\"" + element.choices[i] + "\">" +
+                    element.choices[i] +
+                    "</option>\n";
+      }
+      buffer += "\t</select>\n";
+      buffer += "\t<span class=\"rundata-units\">" + element.units + "</span>\n";
+      buffer += "</div>\n";
+      return buffer;      
+  }
+}
+
+class ElementRenderer {
+  constructor() {
+      this.output = "";
+  }
+  render(element) {
+      var helper = null
+      if (element.type == 'Int') {
+          helper = new GenericRenderer();
+          return helper.render(element);
+      } else if (element.type == 'Choice') {
+          helper = new DropdownRenderer();
+          return helper.render(element);
+      }
+      return "";
   }
 }
 
