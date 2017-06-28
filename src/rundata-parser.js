@@ -5,7 +5,9 @@ if (typeof require == 'function') {
   var XMLSerializer = require('xmldom').XMLSerializer;
 }
 if (typeof module == 'undefined') { 
-    var module = {};
+    var module = {
+        "exports": {}
+    };
 }
 
 class ElementParser {
@@ -150,7 +152,12 @@ class ElementRenderer {
   }
   render(element) {
       var helper = null
-      if (element.type == 'Int') {
+      if (element.type == 'Int' || 
+          element.type == 'Float'|| 
+          element.type == 'String'|| 
+          element.type == 'Choice'||
+          element.type == 'Img'||
+          element.type == 'Time') {
           helper = new GenericRenderer();
           return helper.render(element);
       } else if (element.type == 'Choice') {
