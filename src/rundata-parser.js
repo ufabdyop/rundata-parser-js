@@ -158,7 +158,7 @@ class DropdownRenderer {
           buffer += " data-required=\"true\""; 
       }
       buffer += ">\n";
-      buffer += "<option></option>\n";
+      buffer += "\t\t<option></option>\n";
       for( var i in element.choices) {
           buffer += "\t\t<option data-index=\"" + i + "\"" +
                             " value=\"" + element.choices[i] + "\">" +
@@ -200,11 +200,15 @@ class ElementRenderer {
 }
 
 class RundataParser {
-  constructor() {
+  constructor(rundataObject) {
       this.raw = {};
       this.xml = "";
       this.xmlDoc = {};
       this.inputs = [];
+      this.parsedObject = {};
+      if (rundataObject) {
+        this.parsedObject = this.parse(rundataObject);
+      }
   }    
   parse(rawObject) {
     this.raw = rawObject;
@@ -249,15 +253,11 @@ class RundataParser {
       }
       return inputs;
   }
-  getHtml(rawObject) {
+  getHtml() {
       var buffer = "";
-      var parsedData = this.parse(rawObject);
-      var xmlDoc = parsedData['dom'];
-      var inputs = this.parseChildren(xmlDoc);
-      
       var renderer = new ElementRenderer();
-      for( var i in inputs ) {
-          buffer += renderer.render(inputs[i]);
+      for( var i in this.inputs ) {
+          buffer += renderer.render(this.inputs[i]);
       }
       return buffer;
   }

@@ -188,15 +188,16 @@ describe('RundataParser', function() {
         assert.equal(result.inputs[0].description, 'Tips Used: (enter number)');
     });
     it('should transform xml into html', function() {
-        parser = new RundataParser();
+        parser = new RundataParser(afmRundata[4]);
         var expectedOutput = "<div class=\"rundata-input\" data-type=\"Int\">\n\
 	<label for=\"tips-used\">Tips Used: (enter number)</label>\n\
 	<input id=\"tips-used\" name=\"tips-used\" data-required=\"true\"></input>\n\
 	<span class=\"rundata-units\"></span>\n\
 </div>\n";
-        var result = parser.getHtml(afmRundata[4]);
+        var result = parser.getHtml();
         assert.equal(expectedOutput, result);
     });
+    
   });
 });
 
@@ -235,6 +236,7 @@ describe('ElementRenderer', function() {
         var expectedOutputHtml = "<div class=\"rundata-input\" data-type=\"Choice\">\n\
 	<label for=\"mode-used\">Mode Used:</label>\n\
 	<select id=\"mode-used\" name=\"mode-used\" data-required=\"true\">\n\
+		<option></option>\n\
 		<option data-index=\"0\" value=\"ScanAsyst\">ScanAsyst</option>\n\
 		<option data-index=\"1\" value=\"Tapping\">Tapping</option>\n\
 		<option data-index=\"2\" value=\"Contact\">Contact</option>\n\
@@ -248,6 +250,6 @@ describe('ElementRenderer', function() {
         assert.equal(expectedOutputHtml, output);
     });
     
-    //
   });
 });
+
