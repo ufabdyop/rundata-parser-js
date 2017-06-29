@@ -49,20 +49,18 @@ describe('DOM tests - Signup form', function() {
     rundataParser.writeHtmlToDomId('container');
     var comments = document.getElementById("service-comments");
     comments.value = "Here is my comment";
-    var xmlString = rundataParser.pullValuesAsXml({"agent": "coral", "item": "House Vacuum", "id": "Runtime Manager??rundata??BLABLABLA"});
-    console.log(xmlString);
-    console.log(rundataResponseForService);
+    var xmlString = rundataParser.pullValuesAsXml({"agent": "coral", "item": "House Vacuum", "id": "FAKEID"});
     expect(xmlString).to.equal(rundataResponseForService);
   });
     
 });
 
-var rundataDefinitionForService = {"name":"service","description":"Service","xmlDefinition":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<process xmlns=\"http://snf.stanford.edu/rmconfig1\" id=\"service\">\n    <comment>Use this process if you are doing a quick service on the machine and do not wish to collect any data. Staff only, or by permission.</comment>\n    <comment>$augmented</comment>\n    <description>Service</description>\n    <inputString id=\"service-comments\" cat=\"optional\">\n        <description>Comments</description>\n    </inputString>\n</process>\n<!--@CLASSNAME:org.opencoral.runtime.xml.Process-->"};
+var rundataDefinitionForService = {"name":"service","version":"2.54","description":"Service","xmlDefinition":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<process xmlns=\"http://snf.stanford.edu/rmconfig1\" id=\"service\">\n    <comment>Use this process if you are doing a quick service on the machine and do not wish to collect any data. Staff only, or by permission.</comment>\n    <comment>$augmented</comment>\n    <description>Service</description>\n    <inputString id=\"service-comments\" cat=\"optional\">\n        <description>Comments</description>\n    </inputString>\n</process>\n<!--@CLASSNAME:org.opencoral.runtime.xml.Process-->"};
 var rundataResponseForService = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 <rmRunData xmlns=\"http://snf.stanford.edu/rmconfig1\" name=\"service\"\n\
     version=\"2.54\" agent=\"coral\" item=\"House Vacuum\" lot=\"not assigned\"\n\
     viewlock=\"not locked\"\n\
-    id=\"Runtime Manager??rundata??2017-06-29 14:22:39??3\"\n\
+    id=\"FAKEID\"\n\
     autosaved=\"false\" active=\"true\">\n\
     <element>\n\
         <key>service-comments</key>\n\
@@ -71,3 +69,4 @@ var rundataResponseForService = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
     </element>\n\
 </rmRunData>\n\
 <!--@CLASSNAME:org.opencoral.runtime.xml.RmRunData-->";
+

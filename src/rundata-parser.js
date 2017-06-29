@@ -230,6 +230,7 @@ class RundataParser {
     var domParser = new DOMParser();
     this.xml = rawObject["xmlDefinition"];
     this.description = rawObject["description"];
+    this.version = (rawObject["version"] ? rawObject["version"] : "") ;
     this.name = rawObject["name"];
     this.xmlDoc = domParser.parseFromString(this.xml,"text/xml");
     this.comment = this.xmlDoc.getElementsByTagName('comment')[0].childNodes[0].data;
@@ -239,7 +240,8 @@ class RundataParser {
         "description": this.description,
         "comment": this.comment,
         "name": this.name,
-        "inputs": this.inputs
+        "inputs": this.inputs,
+        "version": this.version
     };
   }
   parseChildren(xml) {
@@ -299,20 +301,20 @@ class RundataParser {
       var buffer = "";
       buffer += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<rmRunData xmlns=\"http://snf.stanford.edu/rmconfig1\" name=\"service\"\n" +
-                    "\tversion=\"TODO_GET_FROM_SERVER\" agent=\"" + options.agent + "\" item=\"" + options.item + "\" lot=\"not assigned\"\n" +
-                    "\tviewlock=\"not locked\"\n" +
-                    "\tid=\"" + options.id + "\"\n" +
-                    "\tautosaved=\"false\" active=\"true\">\n";
+                    "    version=\"" + this.version + "\" agent=\"" + options.agent + "\" item=\"" + options.item + "\" lot=\"not assigned\"\n" +
+                    "    viewlock=\"not locked\"\n" +
+                    "    id=\"" + options.id + "\"\n" +
+                    "    autosaved=\"false\" active=\"true\">\n";
       for( var i in this.inputs) {
           var id = this.inputs[i].id;
           var element = document.getElementById(id);
           var value = element.value;
-          console.log(this.inputs[i]);
-          buffer += "\t<element>\n" +
-                "\t\t<key>" + id + "</key>\n" +
-                "\t\t<stringValue>" + value + "</stringValue>\n" +
-                "\t\t<fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
-            "\t</element>\n";
+          //console.log(this.inputs[i]);
+          buffer += "    <element>\n" +
+                "        <key>" + id + "</key>\n" +
+                "        <stringValue>" + value + "</stringValue>\n" +
+                "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
+            "    </element>\n";
       }
       buffer += "</rmRunData>\n" +
                 "<!--@CLASSNAME:org.opencoral.runtime.xml.RmRunData-->";
