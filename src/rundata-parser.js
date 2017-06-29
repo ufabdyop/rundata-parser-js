@@ -280,6 +280,16 @@ class RundataParser {
       buffer += "</div>\n";
       return buffer;
   }
+  pullValuesFromDocument() {
+      var returnArray = [];
+      for( var i in this.inputs) {
+          var id = this.inputs[i].id;
+          var element = document.getElementById(id);
+          var value = element.value;
+          returnArray.push({"id": id, "value": value});
+      }
+      return returnArray;
+  }
 }
 
 // export {RundataParser};
