@@ -40,7 +40,8 @@ class ElementParser {
     this.cat = this.getAttributeOrEmpty('cat');
     this.src = this.getAttributeOrEmpty('src');
     this.required = (this.cat != "optional");
-    this.choices =  this.getTagsOrEmpty('choice');
+    this.choices = this.getTagsOrEmpty('choice');
+    
     
     return {
         "id": this.id,
@@ -70,14 +71,14 @@ class ElementParser {
        return false;
   }
   getTagsOrEmpty(tag) {
-      var returnValue = {};
+      var returnValue = [];
       var elems = this.xmlDoc.getElementsByTagName(tag);
        if (elems) {
             for(var i = 0; i < elems.length; i++) {
                 if (elems[i]) {
                     var id = elems[i].getAttribute("id");
                     if (elems[i].firstChild) {
-                        returnValue[id] = elems[i].firstChild.data;
+                        returnValue.push({"id": id, "value": elems[i].firstChild.data});
                     }
                 }
             }
@@ -174,9 +175,9 @@ class DropdownRenderer {
       buffer += ">\n";
       buffer += "\t\t<option></option>\n";
       for( var i in element.choices) {
-          buffer += "\t\t<option data-index=\"" + i + "\"" +
-                            " value=\"" + element.choices[i] + "\">" +
-                    element.choices[i] +
+          buffer += "\t\t<option data-index=\"" + element.choices[i].id + "\"" +
+                            " value=\"" + element.choices[i].value + "\">" +
+                    element.choices[i].value +
                     "</option>\n";
       }
       buffer += "\t</select>\n";

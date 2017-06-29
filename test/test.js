@@ -117,16 +117,19 @@ describe('ElementParser', function() {
     it('should parse rundata dropdown element', function() {
         var inputXml = "<inputChoice id=\"mode-used\" type=\"string\">\n\
             <description>Mode Used:</description>\n\
-            <choice id=\"0\">ScanAsyst</choice>\n\
-            <choice id=\"1\">Tapping</choice>\n\
-            <choice id=\"2\">Contact</choice>\n\
-            <choice id=\"3\">Peak Force QNM</choice>\n\
+            <choice id=\"5\">ScanAsyst</choice>\n\
+            <choice id=\"6\">Tapping</choice>\n\
+            <choice id=\"7\">Contact</choice>\n\
+            <choice id=\"8\">Peak Force QNM</choice>\n\
         </inputChoice>";
         parser = new ElementParser();
         var result = parser.parse(inputXml);
         assert.equal(result.type, 'Choice');
         assert.equal(result.id, 'mode-used');
-        assert.equal(result.choices[0], 'ScanAsyst');
+        assert.equal(result.choices[0].id, 5);
+        assert.equal(result.choices[0].value, 'ScanAsyst');
+        assert.equal(result.choices[1].id, 6);
+        assert.equal(result.choices[1].value, 'Tapping');
     });    
   });
 });
