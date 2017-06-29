@@ -39,5 +39,11 @@ var afmRundata = [
 var rundataParser = new RundataParser(tmvRundata[0]);
 var outputHtml = rundataParser.getHtml();
 
-document.write(outputHtml);
+var formHtml = "<form action=\"\" method=\"POST\">\n" + 
+        outputHtml +
+        "\n\n\
+        <input type=\"submit\" name=\"submit\" value=\"submit\"></input>\n\
+        </form>";
+
+document.getElementById('container').innerHTML = formHtml;
 

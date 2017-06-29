@@ -34,6 +34,7 @@ class ElementParser {
     this.tag = this.xmlDoc.firstChild.tagName;
     this.type = this.tag.replace('input', '');
     this.units = this.getTagOrEmpty('units');
+    this.staffOnly = this.getAttributeOrEmpty('staffOnly');
     this.min = this.getAttributeOrEmpty('min');
     this.max = this.getAttributeOrEmpty('max');
     this.cat = this.getAttributeOrEmpty('cat');
@@ -53,6 +54,7 @@ class ElementParser {
         "cat": this.cat,
         "src": this.src,
         "choices": this.choices,
+        "staffOnly": this.staffOnly,
         "required": this.required
     }
   }
@@ -97,7 +99,11 @@ class GenericRenderer {
   }
   render(element) {
       var buffer = "";
-      buffer += "<div class=\"rundata-input\" data-type=\"" + element.type + "\">\n";
+      buffer += "<div class=\"rundata-input\" data-type=\"" + element.type + "\""; 
+      if (element.staffOnly) {
+          buffer += " data-staff-only=\"true\"";
+      }
+      buffer += ">\n";
       buffer += "\t<label for=\"" + element.id + "\">" + element.description + "</label>\n";
       buffer += "\t<input id=\"" + element.id + "\" name=\"" + element.id + "\"";
       if (element.min) {
@@ -127,7 +133,11 @@ class InputImageRenderer {
   }
   render(element) {
       var buffer = "";
-      buffer += "<div class=\"rundata-input\" data-type=\"" + element.type + "\">\n";
+      buffer += "<div class=\"rundata-input\" data-type=\"" + element.type + "\""; 
+      if (element.staffOnly) {
+          buffer += " data-staff-only=\"true\"";
+      }
+      buffer += ">\n";
       buffer += "\t<label for=\"" + element.id + "\">" + element.description + "</label>\n";
       buffer += "\t<img id=\"" + element.id + "\" src=\"" + element.src + "\"/>";
       if (element.units === false) {
@@ -145,7 +155,11 @@ class DropdownRenderer {
   }
   render(element) {
       var buffer = "";
-      buffer += "<div class=\"rundata-input\" data-type=\"" + element.type + "\">\n";
+      buffer += "<div class=\"rundata-input\" data-type=\"" + element.type + "\""; 
+      if (element.staffOnly) {
+          buffer += " data-staff-only=\"true\"";
+      }
+      buffer += ">\n";
       buffer += "\t<label for=\"" + element.id + "\">" + element.description + "</label>\n";
       buffer += "\t<select id=\"" + element.id + "\" name=\"" + element.id + "\"";
       if (element.min) {
@@ -260,7 +274,6 @@ class RundataParser {
                     "data-name=\"" + this.name + "\" " + 
                     "data-comment=\"" + this.comment + "\" " + 
                     "data-description=\"" + this.description + "\">\n";
-      console.log(this);
       for( var i in this.inputs ) {
           buffer += renderer.render(this.inputs[i]);
       }

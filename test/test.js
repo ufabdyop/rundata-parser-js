@@ -189,10 +189,12 @@ describe('RundataParser', function() {
     });
     it('should transform xml into html', function() {
         parser = new RundataParser(afmRundata[4]);
-        var expectedOutput = "<div class=\"rundata-input\" data-type=\"Int\">\n\
+        var expectedOutput = "<div class=\"rundata-container\" data-name=\"afm-bruker-dimension-icon-fake\" data-comment=\"AFM\" data-description=\"AFM Fake Rundata Definition2\">\n\
+<div class=\"rundata-input\" data-type=\"Int\">\n\
 	<label for=\"tips-used\">Tips Used: (enter number)</label>\n\
 	<input id=\"tips-used\" name=\"tips-used\" data-required=\"true\"></input>\n\
 	<span class=\"rundata-units\"></span>\n\
+</div>\n\
 </div>\n";
         var result = parser.getHtml();
         assert.equal(expectedOutput, result);
