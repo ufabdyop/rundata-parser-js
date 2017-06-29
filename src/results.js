@@ -35,22 +35,9 @@ var afmRundata = [
     }
 ];
 
-var parser = new DOMParser();
-var text = afmRundata[0]["xmlDefinition"];
-var xmlDoc = parser.parseFromString(text,"text/xml");
-
-var description = xmlDoc.getElementsByTagName('description')[0].innerHTML;
-var comment = xmlDoc.getElementsByTagName('comment')[0].innerHTML;
-
-var c = xmlDoc.children[0].children;
-
-var input = afmRundata[0];
-
-var rundataParser = new RundataParser();
-var output = rundataParser.parse(afmRundata[0]);
-var outputHtml = rundataParser.getHtml(afmRundata[0]);
-
-
-
+//var rundataParser = new RundataParser(afmRundata[0]);
+var rundataParser = new RundataParser(tmvRundata[0]);
+var outputHtml = rundataParser.getHtml();
 
 document.write(outputHtml);
+

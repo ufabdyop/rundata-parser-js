@@ -248,7 +248,6 @@ class RundataParser {
             tmpInput = elementParser.parse(tempXml);
             inputs.push(tmpInput);
         } else {
-            //console.log("*" + kids[i].tagName + "*");
         }
       }
       return inputs;
@@ -256,9 +255,16 @@ class RundataParser {
   getHtml() {
       var buffer = "";
       var renderer = new ElementRenderer();
+      
+      buffer += "<div class=\"rundata-container\" " +
+                    "data-name=\"" + this.name + "\" " + 
+                    "data-comment=\"" + this.comment + "\" " + 
+                    "data-description=\"" + this.description + "\">\n";
+      console.log(this);
       for( var i in this.inputs ) {
           buffer += renderer.render(this.inputs[i]);
       }
+      buffer += "</div>\n";
       return buffer;
   }
 }
