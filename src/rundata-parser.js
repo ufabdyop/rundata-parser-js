@@ -310,11 +310,23 @@ class RundataParser {
           var element = document.getElementById(id);
           var value = element.value;
           //console.log(this.inputs[i]);
-          buffer += "    <element>\n" +
-                "        <key>" + id + "</key>\n" +
-                "        <stringValue>" + value + "</stringValue>\n" +
-                "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
-            "    </element>\n";
+          if (this.inputs[i].type == 'Choice') {
+            var integerIndex = element.options[element.selectedIndex].dataset.index;
+
+            buffer += "    <element>\n" +
+                    "        <key>" + id + "</key>\n" +
+                    "        <stringValue>" + value + "</stringValue>\n" +
+                    "        <intValue>" + integerIndex + "</intValue>\n" +
+                    "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
+                    "        <fieldSubType>" + this.inputs[i].subtype + "</fieldSubType>\n" +
+                    "    </element>\n";              
+          } else {
+            buffer += "    <element>\n" +
+                    "        <key>" + id + "</key>\n" +
+                    "        <stringValue>" + value + "</stringValue>\n" +
+                    "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
+                    "    </element>\n";
+          }
       }
       buffer += "</rmRunData>\n" +
                 "<!--@CLASSNAME:org.opencoral.runtime.xml.RmRunData-->";
