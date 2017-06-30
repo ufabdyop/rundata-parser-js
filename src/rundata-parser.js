@@ -31,6 +31,7 @@ class ElementParser {
     this.xmlDoc = domParser.parseFromString(this.xml,"text/xml");
     this.description = this.getTagOrEmpty('description');
     this.id = this.xmlDoc.firstChild.getAttribute("id");
+    this.subtype = this.xmlDoc.firstChild.getAttribute("type");
     this.tag = this.xmlDoc.firstChild.tagName;
     this.type = this.tag.replace('input', '');
     this.units = this.getTagOrEmpty('units');
@@ -56,6 +57,7 @@ class ElementParser {
         "src": this.src,
         "choices": this.choices,
         "staffOnly": this.staffOnly,
+        "subtype": this.subtype,
         "required": this.required
     }
   }
