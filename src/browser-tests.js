@@ -59,8 +59,16 @@ describe('DOM tests - Signup form', function() {
     rundataParser.writeHtmlToDomId('container');
     var comments = document.getElementById("comments");
     comments.value = "Here is my comment";
+
+    var mode = document.getElementById("mode-used");
+    mode.selectedIndex = 1;
+          
     var xmlString = rundataParser.pullValuesAsXml({"agent": "coral", "item": "House Vacuum", "id": "FAKEID"});
-    expect(xmlString).to.equal("INTENTIONAL FAIL");
+
+    var dp = new DOMParser();
+    var indexValue = dp.parseFromString(xmlString, "text/xml").getElementsByTagName('element')[0].children[2].childNodes[0].data;
+    
+    expect(indexValue).to.equal("10");
   });
     
     
