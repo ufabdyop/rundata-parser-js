@@ -1,4 +1,5 @@
 "use strict";
+var RundataParserVersion = "1.0.0";
 
 if (typeof require == 'function') { 
   var DOMParser = require('xmldom').DOMParser;
