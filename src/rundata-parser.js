@@ -237,6 +237,7 @@ class RundataParser {
     this.xmlDoc = domParser.parseFromString(this.xml,"text/xml");
     this.comment = this.xmlDoc.getElementsByTagName('comment')[0].childNodes[0].data;
     this.inputs = this.parseChildren(this.xmlDoc);
+    
     return {
         "dom": this.xmlDoc,
         "description": this.description,
@@ -299,14 +300,18 @@ class RundataParser {
       }
       return returnArray;
   }
+  
   pullValuesAsXml(options) {
+        if (!options.id) {
+            options.id = "not assigned";
+        }
       var buffer = "";
       buffer += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<rmRunData xmlns=\"http://snf.stanford.edu/rmconfig1\" name=\"service\"\n" +
+                "<rmRunData xmlns=\"http://snf.stanford.edu/rmconfig1\" name=\"" + options.name + "\"\n" +
                     "    version=\"" + this.version + "\" agent=\"" + options.agent + "\" item=\"" + options.item + "\" lot=\"not assigned\"\n" +
                     "    viewlock=\"not locked\"\n" +
                     "    id=\"" + options.id + "\"\n" +
-                    "    autosaved=\"false\" active=\"true\">\n";
+                    "    autosaved=\"false\" active=\"false\">\n";
       for( var i in this.inputs) {
           var id = this.inputs[i].id;
           var element = document.getElementById(id);
@@ -314,14 +319,23 @@ class RundataParser {
           //console.log(this.inputs[i]);
           if (this.inputs[i].type == 'Choice') {
             var integerIndex = element.options[element.selectedIndex].dataset.index;
+            if (!integerIndex) {
+                integerIndex = "";
+            }
 
             buffer += "    <element>\n" +
                     "        <key>" + id + "</key>\n" +
                     "        <stringValue>" + value + "</stringValue>\n" +
                     "        <intValue>" + integerIndex + "</intValue>\n" +
                     "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
-                    "        <fieldSubType>" + this.inputs[i].subtype + "</fieldSubType>\n" +
-                    "    </element>\n";              
+                    "        <fieldSubtype>" + this.inputs[i].subtype + "</fieldSubtype>\n" +
+                    "    </element>\n";  
+          } else if (this.inputs[i].type == 'Int') {
+            buffer += "    <element>\n" +
+                    "        <key>" + id + "</key>\n" +
+                    "        <intValue>" + value + "</intValue>\n" +
+                    "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
+                    "    </element>\n";
           } else {
             buffer += "    <element>\n" +
                     "        <key>" + id + "</key>\n" +
@@ -334,8 +348,19 @@ class RundataParser {
                 "<!--@CLASSNAME:org.opencoral.runtime.xml.RmRunData-->";
       
       return buffer;
-      
   }
+  
+  pullValuesForApi(options) {
+      var xml = this.pullValuesAsXml(options);
+      var ob = {
+          "description": options.description,
+          "name": options.name,
+          "version": options.version,
+          "xmlDefinition": xml
+      };
+      return ob;
+  }
+  
   isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
   }
