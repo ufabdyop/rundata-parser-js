@@ -302,6 +302,12 @@ class RundataParser {
       return returnArray;
   }
   
+  /**
+   * 
+   * @param {type} options
+   *    expecting keys of: name, version, agent, item, and optionally id
+   * @returns {RundataParser.pullValuesAsXml.buffer|String}
+   */
   pullValuesAsXml(options) {
         if (!options.id) {
             options.id = "not assigned";
@@ -351,6 +357,12 @@ class RundataParser {
       return buffer;
   }
   
+  /**
+   * 
+   * @param {type} options
+   *    expecting keys of: name, version, agent, item, and optionally id
+   * @returns {RundataParser.pullValuesAsXml.buffer|String}
+   */
   pullValuesForApi(options) {
       var xml = this.pullValuesAsXml(options);
       var ob = {
