@@ -11,6 +11,18 @@ if (typeof module == 'undefined') {
     };
 }
 
+function escapeXml(unsafe) {
+    return unsafe.replace(/[<>&'"]/g, function (c) {
+        switch (c) {
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '&': return '&amp;';
+            case '\'': return '&apos;';
+            case '"': return '&quot;';
+        }
+    });
+}
+
 class ElementParser {
   constructor() {
       this.xml = "";
@@ -305,12 +317,15 @@ class RundataParser {
   /**
    * 
    * @param {type} options
-   *    expecting keys of: name, version, agent, item, and optionally id
+   *    expecting keys of: name, version, agent (or username), item, and optionally id
    * @returns {RundataParser.pullValuesAsXml.buffer|String}
    */
   pullValuesAsXml(options) {
         if (!options.id) {
             options.id = "not assigned";
+        }
+        if (!options.agent) {
+            options.agent = options.username;
         }
       var buffer = "";
       buffer += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -332,7 +347,7 @@ class RundataParser {
 
             buffer += "    <element>\n" +
                     "        <key>" + id + "</key>\n" +
-                    "        <stringValue>" + value + "</stringValue>\n" +
+                    "        <stringValue>" + escapeXml(value) + "</stringValue>\n" +
                     "        <intValue>" + integerIndex + "</intValue>\n" +
                     "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
                     "        <fieldSubtype>" + this.inputs[i].subtype + "</fieldSubtype>\n" +
@@ -340,13 +355,13 @@ class RundataParser {
           } else if (this.inputs[i].type == 'Int') {
             buffer += "    <element>\n" +
                     "        <key>" + id + "</key>\n" +
-                    "        <intValue>" + value + "</intValue>\n" +
+                    "        <intValue>" + escapeXml(value) + "</intValue>\n" +
                     "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
                     "    </element>\n";
           } else {
             buffer += "    <element>\n" +
                     "        <key>" + id + "</key>\n" +
-                    "        <stringValue>" + value + "</stringValue>\n" +
+                    "        <stringValue>" + escapeXml(value) + "</stringValue>\n" +
                     "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
                     "    </element>\n";
           }
