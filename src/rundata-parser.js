@@ -12,6 +12,9 @@ if (typeof module == 'undefined') {
 }
 
 function escapeXml(unsafe) {
+    if (typeof unsafe == 'undefined') {
+        return "";
+    }
     return unsafe.replace(/[<>&'"]/g, function (c) {
         switch (c) {
             case '<': return '&lt;';
