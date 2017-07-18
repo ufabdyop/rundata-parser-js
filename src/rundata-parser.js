@@ -131,6 +131,9 @@ class GenericRenderer {
       if (element.max) {
           buffer += " data-max=\"" + element.max + "\""; 
       }
+      if (element.type) {
+          buffer += " data-type=\"" + element.type + "\""; 
+      }
       if (element.required) {
           buffer += " data-required=\"true\""; 
       }
@@ -312,9 +315,33 @@ class RundataParser {
           var id = this.inputs[i].id;
           var element = document.getElementById(id);
           var value = element.value;
-          returnArray.push({"id": id, "value": value});
+          var tmpdata = {"id": id, "value": value};
+          if (element.dataset && element.dataset.type) {
+              tmpdata.type = element.dataset.type;
+          }
+          if (element.dataset && element.dataset.required) {
+              tmpdata.required = element.dataset.required;
+          }
+          returnArray.push(tmpdata);
       }
       return returnArray;
+  }
+  isValid() {
+      var values = this.pullValuesFromDocument();
+      for(var i in values) {
+          var v = values[i];
+          if(v.type && v.type == "Int") {
+              if (isNaN(v.value)) {
+                  return false;
+              }
+          }
+          if(v.type && v.type == "Float") {
+              if (isNaN(v.value)) {
+                  return false;
+              }
+          }
+      }
+      return true;
   }
   
   /**

@@ -50,9 +50,17 @@ describe('DOM tests - Signup form', function() {
     var comments = document.getElementById("service-comments");
     comments.value = "Here is my comment";
     var xmlString = rundataParser.pullValuesAsXml({"agent": "coral", "item": "House Vacuum", "id": "FAKEID", "name": "service"});
-    console.log(xmlString);
-    console.log(rundataResponseForService);
     expect(xmlString).to.equal(rundataResponseForService);
+  });
+  
+  it('only allows ints in InputInt and floats in InputFloat', function() {
+    document.getElementById("container").innerHTML = "";
+    rundataParser = new RundataParser(afmRundata[0]);
+    rundataParser.writeHtmlToDomId('container');
+    var tips = document.getElementById("tips-used");
+    tips.value = "Not a number";
+    var valid = rundataParser.isValid();   
+    expect(valid).to.equal(false);
   });
     
   it('AFM Rundata Form input can be filled and then transformed to XML', function() {
