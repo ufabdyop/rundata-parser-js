@@ -330,16 +330,24 @@ class RundataParser {
       var values = this.pullValuesFromDocument();
       for(var i in values) {
           var v = values[i];
-          if(v.type && v.type == "Int") {
+          if(v.type && v.type == "Int" && v.value) {
               if (isNaN(v.value)) {
                   return false;
               }
           }
-          if(v.type && v.type == "Float") {
+          if(v.type && v.type == "Float" && v.value) {
               if (isNaN(v.value)) {
                   return false;
               }
           }
+          if(v.type && v.type == "Time" && v.value) {
+              if (!v.value.match(/^\d\d:\d\d:\d\d$/)) {
+                  return false;
+              }
+          }
+          if(v.required && !v.value) {
+                return false;
+          }          
       }
       return true;
   }

@@ -62,6 +62,34 @@ describe('DOM tests - Signup form', function() {
     var valid = rundataParser.isValid();   
     expect(valid).to.equal(false);
   });
+  
+  it('only HH:MM:SS in Time fields', function() {
+    document.getElementById("container").innerHTML = "";
+    rundataParser = new RundataParser(afmRundata[0]);
+    rundataParser.writeHtmlToDomId('container');
+
+      document.getElementById("tips-used").value = "1"; //just to pass required check
+      document.getElementById("mode-used").selectedIndex = 1; //just to pass required check
+    
+    var field = document.getElementById("tech-time");
+    field.value = "Not a number";
+    var valid = rundataParser.isValid();   
+    expect(valid).to.equal(false);
+
+    field.value = "12:14:01";
+    var valid = rundataParser.isValid();   
+    expect(valid).to.equal(true);
+  });
+  
+  it('checks required fields', function() {
+    document.getElementById("container").innerHTML = "";
+    rundataParser = new RundataParser(afmRundata[0]);
+    rundataParser.writeHtmlToDomId('container');
+    var field = document.getElementById("tips-used");
+    field.value = "";
+    var valid = rundataParser.isValid();   
+    expect(valid).to.equal(false);
+  });
     
   it('AFM Rundata Form input can be filled and then transformed to XML', function() {
     document.getElementById("container").innerHTML = "";
