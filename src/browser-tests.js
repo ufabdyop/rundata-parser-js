@@ -49,7 +49,9 @@ describe('DOM tests - Signup form', function() {
     rundataParser.writeHtmlToDomId('container');
     var comments = document.getElementById("service-comments");
     comments.value = "Here is my comment";
-    var xmlString = rundataParser.pullValuesAsXml({"agent": "coral", "item": "House Vacuum", "id": "FAKEID"});
+    var xmlString = rundataParser.pullValuesAsXml({"agent": "coral", "item": "House Vacuum", "id": "FAKEID", "name": "service"});
+    console.log(xmlString);
+    console.log(rundataResponseForService);
     expect(xmlString).to.equal(rundataResponseForService);
   });
     
@@ -80,7 +82,7 @@ var rundataResponseForService = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
     version=\"2.54\" agent=\"coral\" item=\"House Vacuum\" lot=\"not assigned\"\n\
     viewlock=\"not locked\"\n\
     id=\"FAKEID\"\n\
-    autosaved=\"false\" active=\"true\">\n\
+    autosaved=\"false\" active=\"false\">\n\
     <element>\n\
         <key>service-comments</key>\n\
         <stringValue>Here is my comment</stringValue>\n\
