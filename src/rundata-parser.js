@@ -59,7 +59,6 @@ class ElementParser {
     this.required = (this.cat != "optional");
     this.choices = this.getTagsOrEmpty('choice');
     
-    
     return {
         "id": this.id,
         "original": this.original,
@@ -127,16 +126,27 @@ class GenericRenderer {
       buffer += "\t<input id=\"" + element.id + "\" name=\"" + element.id + "\"";
       if (element.min) {
           buffer += " data-min=\"" + element.min + "\""; 
+          buffer += " min=\"" + element.min + "\""; 
       }
       if (element.max) {
           buffer += " data-max=\"" + element.max + "\""; 
+          buffer += " max=\"" + element.max + "\""; 
       }
       if (element.type) {
           buffer += " data-type=\"" + element.type + "\""; 
       }
       if (element.required) {
-          buffer += " data-required=\"true\""; 
+          buffer += " data-required=\"true\" required"; 
       }
+      
+        if (element.type == "Int") {
+            buffer += " type=\"number\""
+        } else if (element.type == "Float") {
+            buffer += " type=\"number\""
+        } else if (element.type == "Time") {
+            buffer += " pattern=\"^\\d\\d:\\d\\d:\\d\\d$\""
+        }
+        
       buffer += "></input>\n";
       
       if (element.units === false) {
@@ -191,7 +201,7 @@ class DropdownRenderer {
           buffer += " data-max=\"" + element.max + "\""; 
       }
       if (element.required) {
-          buffer += " data-required=\"true\""; 
+          buffer += " data-required=\"true\" required"; 
       }
       buffer += ">\n";
       buffer += "\t\t<option></option>\n";
@@ -236,7 +246,7 @@ class ElementRenderer {
 }
 
 class RundataParser {
-  constructor(rundataObject) {
+  constructor(rundataObject, submitCallback) {
       this.raw = {};
       this.xml = "";
       this.xmlDoc = {};
@@ -244,6 +254,11 @@ class RundataParser {
       this.parsedObject = {};
       if (rundataObject) {
         this.parsedObject = this.parse(rundataObject);
+      }
+      if (submitCallback) {
+        this.submitCallback = submitCallback;
+      } else {
+        this.submitCallback = function() {return false;}
       }
   }    
   parse(rawObject) {
@@ -298,16 +313,22 @@ class RundataParser {
       buffer += "<div class=\"rundata-container\" " +
                     "data-name=\"" + this.name + "\" " + 
                     "data-comment=\"" + this.comment + "\" " + 
-                    "data-description=\"" + this.description + "\">\n";
+                    "data-description=\"" + this.description + "\">\n" +
+                    "<form onsubmit=\"return false;\" class=\"rundata-container-form\">\n";
       for( var i in this.inputs ) {
           buffer += renderer.render(this.inputs[i]);
       }
+      buffer += "<button>Submit</button>\n";
+      buffer += "</form>\n";
       buffer += "</div>\n";
       return buffer;
   }
   writeHtmlToDomId(id) {
       var html = this.getHtml();
       document.getElementById(id).innerHTML = html;
+      var form = document.getElementById(id).getElementsByTagName('form')[0];
+      //form.onsubmit = this.submitCallback;
+      form.onsubmit = this.onSubmit.bind(this);
   }
   pullValuesFromDocument() {
       var returnArray = [];
@@ -327,29 +348,46 @@ class RundataParser {
       return returnArray;
   }
   isValid() {
+      return this.pullValidationIssues().valid;
+  }
+  pullValidationIssues() {
+      var valid = true;
       var values = this.pullValuesFromDocument();
       for(var i in values) {
           var v = values[i];
+          v.valid = true;
+          v.issue = "";
           if(v.type && v.type == "Int" && v.value) {
               if (isNaN(v.value)) {
-                  return false;
+                  v.issue = "Not a valid integer: " + v.value;
+                  v.valid = false;
+                  valid = false;
               }
           }
           if(v.type && v.type == "Float" && v.value) {
               if (isNaN(v.value)) {
-                  return false;
+                  v.issue = "Not a valid decimal: " + v.value;
+                  v.valid = false;
+                  valid = false;
               }
           }
           if(v.type && v.type == "Time" && v.value) {
               if (!v.value.match(/^\d\d:\d\d:\d\d$/)) {
-                  return false;
+                  v.issue = "Not a valid time duration: " + v.value;
+                  v.valid = false;
+                  valid = false;
               }
           }
           if(v.required && !v.value) {
-                return false;
+                v.issue = "This field is required";
+                v.valid = false;
+                valid = false;
           }          
       }
-      return true;
+      var issues = {"valid": valid,
+                    "values": values
+                };
+      return issues;
   }
   
   /**
@@ -425,6 +463,14 @@ class RundataParser {
           "xmlDefinition": xml
       };
       return ob;
+  }
+  
+  onSubmit(evt) {
+      try {
+          this.submitCallback(this, evt);
+      } catch (ex) {
+      }
+      return false;
   }
   
   isNumeric(n) {

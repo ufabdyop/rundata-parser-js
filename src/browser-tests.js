@@ -127,3 +127,32 @@ var rundataResponseForService = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 </rmRunData>\n\
 <!--@CLASSNAME:org.opencoral.runtime.xml.RmRunData-->";
 
+
+function testit() {
+    var field = document.getElementById("comments");
+
+    field.addEventListener("input", function(event) {
+        if (true) {
+            field.setCustomValidity("Wow!");
+        } else {
+            field.setCustomValidity("");
+        }
+    });
+}
+
+function test2() {
+    rundataParser = new RundataParser(afmRundata[0], test3);
+    rundataParser.writeHtmlToDomId('container');
+}
+
+function test3(evt, arg2, arg3) {
+    console.log(evt);
+    console.log(arg2);
+    console.log(arg3);
+    
+    var field = document.getElementById("comments");
+    field.setCustomValidity("");
+    field.setCustomValidity("Wow!");
+    
+    return false;
+}
