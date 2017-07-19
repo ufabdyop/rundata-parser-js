@@ -122,7 +122,11 @@ class GenericRenderer {
           buffer += " data-staff-only=\"true\"";
       }
       buffer += ">\n";
-      buffer += "\t<label for=\"" + element.id + "\">" + element.description + "</label>\n";
+      buffer += "\t<label for=\"" + element.id + "\">" + element.description;
+      if (element.required) {
+          buffer += "<span style=\"color: red;\" class=\"required-indicator\">&nbsp;*</span>\n";
+      }
+      buffer += "</label>\n";
       buffer += "\t<input id=\"" + element.id + "\" name=\"" + element.id + "\"";
       if (element.min) {
           buffer += " data-min=\"" + element.min + "\""; 
@@ -192,7 +196,13 @@ class DropdownRenderer {
           buffer += " data-staff-only=\"true\"";
       }
       buffer += ">\n";
-      buffer += "\t<label for=\"" + element.id + "\">" + element.description + "</label>\n";
+      buffer += "\t<label for=\"" + element.id + "\">" + element.description;
+      
+      if (element.required) {
+          buffer += "<span style=\"color: red;\" class=\"required-indicator\">&nbsp;*</span>\n";
+      }
+      buffer += "</label>\n";
+
       buffer += "\t<select id=\"" + element.id + "\" name=\"" + element.id + "\"";
       if (element.min) {
           buffer += " data-min=\"" + element.min + "\""; 
