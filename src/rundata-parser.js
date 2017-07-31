@@ -175,13 +175,65 @@ class InputImageRenderer {
       }
       buffer += ">\n";
       buffer += "\t<label for=\"" + element.id + "\">" + element.description + "</label>\n";
-      buffer += "\t<img id=\"" + element.id + "\" src=\"" + element.src + "\"/>";
+      if (element.src != "#") {
+        buffer += "\t<img id=\"" + element.id + "\" src=\"" + element.src + "\"/>";
+      }
       if (element.units === false) {
           element.units = "";
       }      
       buffer += "\t<span class=\"rundata-units\">" + element.units + "</span>\n";
       buffer += "</div>\n";
       return buffer;      
+  }
+}
+
+class InputBooleanRenderer {
+  constructor() {
+      this.output = "";
+      this.choices = [];
+      this.choices.push({"id": 1, "value": "true"});
+      this.choices.push({"id": 2, "value": "false"});
+  }
+  render(element) {
+      var buffer = "";
+      buffer += "<div class=\"rundata-input\" data-type=\"" + element.type + "\""; 
+      if (element.staffOnly) {
+          buffer += " data-staff-only=\"true\"";
+      }
+      buffer += ">\n";
+      buffer += "\t<label for=\"" + element.id + "\">" + element.description;
+      
+      if (element.required) {
+          buffer += "<span style=\"color: red;\" class=\"required-indicator\">&nbsp;*</span>\n";
+      }
+      buffer += "</label>\n";
+
+      buffer += "\t<select id=\"" + element.id + "\" name=\"" + element.id + "\"";
+      if (element.min) {
+          buffer += " data-min=\"" + element.min + "\""; 
+      }
+      if (element.max) {
+          buffer += " data-max=\"" + element.max + "\""; 
+      }
+      if (element.required) {
+          buffer += " data-required=\"true\" required"; 
+      }
+      buffer += ">\n";
+      buffer += "\t\t<option></option>\n";
+      for( var i in this.choices) {
+          buffer += "\t\t<option data-index=\"" + this.choices[i].id + "\"" +
+                            " value=\"" + this.choices[i].value + "\">" +
+                    this.choices[i].value +
+                    "</option>\n";
+      }
+      buffer += "\t</select>\n";
+      
+      if (element.units === false) {
+          element.units = "";
+      }      
+      buffer += "\t<span class=\"rundata-units\">" + element.units + "</span>\n";
+      buffer += "</div>\n";
+      return buffer;
   }
 }
 
@@ -250,6 +302,9 @@ class ElementRenderer {
       } else if (element.type == 'Img') {
           helper = new InputImageRenderer();
           return helper.render(element);
+      } else if (element.type == 'Boolean') {
+          helper = new InputBooleanRenderer();
+          return helper.render(element);
       }
       return "";
   }
@@ -298,6 +353,7 @@ class RundataParser {
           'inputFloat', 
           'inputString', 
           'inputChoice',
+          'inputBoolean',
           'inputImg',
           'inputTime',
       ];
