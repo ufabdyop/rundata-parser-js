@@ -175,7 +175,9 @@ class InputImageRenderer {
       }
       buffer += ">\n";
       buffer += "\t<label for=\"" + element.id + "\">" + element.description + "</label>\n";
-      if (element.src != "#") {
+      if (element.src == "#") {
+        buffer += "\t<span data-type=\"Img\" id=\"" + element.id + "\" data-meta=\"empty image\"></span>";
+      } else {
         buffer += "\t<img id=\"" + element.id + "\" src=\"" + element.src + "\"/>";
       }
       if (element.units === false) {
@@ -500,6 +502,12 @@ class RundataParser {
                     "        <intValue>" + escapeXml(value) + "</intValue>\n" +
                     "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
                     "    </element>\n";
+          } else if (this.inputs[i].type == 'Boolean') {
+            buffer += "    <element>\n" +
+                    "        <key>" + id + "</key>\n" +
+                    "        <booleanValue>" + escapeXml(value) + "</booleanValue>\n" +
+                    "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
+                    "    </element>\n";
           } else {
             buffer += "    <element>\n" +
                     "        <key>" + id + "</key>\n" +
@@ -535,6 +543,7 @@ class RundataParser {
       try {
           this.submitCallback(this, evt);
       } catch (ex) {
+          console.log(ex);
       }
       return false;
   }
