@@ -26,6 +26,20 @@ function escapeXml(unsafe) {
     });
 }
 
+function convertTimeStringToSeconds(unsafe) {
+    if (typeof unsafe == 'undefined') {
+        return "";
+    }
+    var matches = unsafe.match(/^(\d\d):(\d\d):(\d\d)$/);
+    if (matches) {
+        var hours = parseInt(matches[1]);
+        var minutes = parseInt(matches[2]);
+        var seconds = parseInt(matches[3]);
+        return (hours * 3600) + (minutes * 60) + seconds;
+    }
+    return "";
+}
+
 class ElementParser {
   constructor() {
       this.xml = "";
@@ -500,6 +514,12 @@ class RundataParser {
             buffer += "    <element>\n" +
                     "        <key>" + id + "</key>\n" +
                     "        <intValue>" + escapeXml(value) + "</intValue>\n" +
+                    "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
+                    "    </element>\n";
+          } else if (this.inputs[i].type == 'Time') {
+            buffer += "    <element>\n" +
+                    "        <key>" + id + "</key>\n" +
+                    "        <stringValue>" + convertTimeStringToSeconds(value) + "</stringValue>\n" +
                     "        <fieldType>Input" + this.inputs[i].type + "</fieldType>\n" +
                     "    </element>\n";
           } else if (this.inputs[i].type == 'Boolean') {
