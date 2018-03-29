@@ -160,7 +160,7 @@ class GenericRenderer {
         if (element.type == "Int") {
             buffer += " type=\"number\""
         } else if (element.type == "Float") {
-            buffer += " type=\"number\""
+            buffer += " type=\"number\" step=\"any\""
         } else if (element.type == "Time") {
             buffer += " pattern=\"^\\d\\d:\\d\\d:\\d\\d$\""
         }
